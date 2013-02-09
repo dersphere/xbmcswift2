@@ -8,6 +8,7 @@
     :copyright: (c) 2012 by Jonathan Beluch
     :license: GPLv3, see LICENSE for more details.
 '''
+from inspect import getargspec
 import os
 import sys
 import pickle
@@ -237,13 +238,22 @@ class Plugin(XBMCMixin):
             return route_decorator(cache_decorator(func))
         return new_decorator
 
-    def route(self, url_rule, name=None, options=None):
+    def route(self, url_rule=None, name=None, is_root=False, options=None):
         '''A decorator to add a route to a view. name is used to
         differentiate when there are multiple routes for a given view.'''
         # TODO: change options kwarg to defaults
         def decorator(f):
             view_name = name or f.__name__
-            self.add_url_rule(url_rule, f, name=view_name, options=options)
+            if is_root:
+                _url_rule = '/'
+            elif not url_rule:
+                _url_rule = '/%s/' % view_name
+                args = getargspec(f)[0]
+                if args:
+                    _url_rule += '/'.join('%s/<%s>' % (p, p) for p in args)
+            else:
+                _url_rule = url_rule
+            self.add_url_rule(_url_rule, f, name=view_name, options=options)
             return f
         return decorator
 
