@@ -301,8 +301,10 @@ class Plugin(XBMCMixin):
                 view_func, items = rule.match(path)
             except NotFoundException:
                 continue
+            self._request.view = view_func.__name__
+            self._request.view_params = items
             log.info('Request for "%s" matches rule for function "%s"',
-                     path, view_func.__name__)
+                     path, self._request.view)
             listitems = view_func(**items)
 
             # Only call self.finish() for UI container listing calls to plugin
