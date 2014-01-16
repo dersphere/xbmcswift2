@@ -43,7 +43,7 @@ or if you only have easy_install::
 I also like to use some helpful virtualenv scripts, so install
 virtualenv-wrapper as well::
 
-    $ sudo pip install virtualenv-wrapper
+    $ sudo pip install virtualenvwrapper
 
 Creating a Virtual Environment
 ------------------------------
